@@ -29,7 +29,8 @@ services:
     container_name: tmv-webhook
     restart: unless-stopped
     environment:
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      # fail-closed: Compose startet nicht, wenn das Secret fehlt
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:?WEBHOOK_SECRET erforderlich - in .env setzen}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/tmv:/app
