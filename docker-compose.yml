@@ -1,0 +1,36 @@
+name: tmv   # fester Projektname – sonst nutzt der Webhook-Container (WORKDIR /app) den Namen "app"
+
+services:
+  web:
+    build: .
+    container_name: tmv-web
+    restart: unless-stopped
+    # keine host-ports: öffentlich läuft alles über den Cloudflare-Tunnel (kein Port-Konflikt mit DMS/reisen/rk)
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: tmv-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
+    volumes:
+      - /opt/tmv/cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+      - /opt/tmv/cloudflared/creds.json:/etc/cloudflared/creds.json:ro
+    depends_on:
+      - web
+
+  webhook:
+    build: ./deploy
+    container_name: tmv-webhook
+    restart: unless-stopped
+    environment:
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/tmv:/app
+    working_dir: /app

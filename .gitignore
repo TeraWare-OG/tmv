@@ -1,0 +1,11 @@
+# Secrets / serverspezifisch – niemals committen
+.env
+cloudflared/config.yml
+cloudflared/creds.json
+
+# Build-/Zwischendateien
+node_modules/
+*.log
+
+# lokaler Prototyp-Arbeitsordner (Quellen liegen in src/)
+prototype/

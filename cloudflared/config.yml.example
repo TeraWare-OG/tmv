@@ -1,0 +1,11 @@
+# Wird beim Deploy zu cloudflared/config.yml (mit echter Tunnel-UUID).
+# creds.json = /root/.cloudflared/<UUID>.json (per 'cloudflared tunnel create tmv' erzeugt).
+tunnel: TMV_TUNNEL_UUID
+credentials-file: /etc/cloudflared/creds.json
+
+ingress:
+  - hostname: tmv.uebelher.biz
+    service: http://web:80
+  - hostname: tmv-hook.uebelher.biz
+    service: http://webhook:9000
+  - service: http_status:404
