@@ -4,8 +4,8 @@ tunnel: TMV_TUNNEL_UUID
 credentials-file: /etc/cloudflared/creds.json
 
 ingress:
-  - hostname: tmv.uebelher.biz
+  - hostname: tmv.teraware.net
     service: http://web:80
-  - hostname: tmv-hook.uebelher.biz
+  - hostname: tmv-hook.teraware.net
     service: http://webhook:9000
   - service: http_status:404
